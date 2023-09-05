@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet">
+    <link href="static/basic.css" rel="stylesheet">
+    <style>
+        .bg{
+          background-image: url('https://www.ibmbigdatahub.com/sites/default/files/flightdelays_embed.jpg');
+          height: 100%;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
+        .box{
+          background-color: #f2f2f2;
+          position:absolute;
+          top:50%;
+          left:50%;
+          transform:translate(-50%,-50%);
+          -ms-transform:translate(-50%,-50%);
+          border-radius: 25px;
+          opacity: 0.8;
+        }
+        body, html{
+            height: 100%;
+            margin: 0;
+        }
+        h1 {
+            font-family:Chalkduster;
+            text-align: center;
+        }
+        a {
+          font-family:Chalkduster;
+        }
+    </style>
+</head>
+<body class="bg">
+    <div class="w3-display-topleft w3-padding-large w3-xlarge">
+      <a href = "{{ url_for('index') }}">Return to home page</a>
+    </div>
+    <div class="box">
+      <h1 class="w3-jumbo w3-animate-top">We're sorry. An error occurred. Please try back later.</h1>
+    </div>
+</body>
+</html>

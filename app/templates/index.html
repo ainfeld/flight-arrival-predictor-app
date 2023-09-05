@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+      <link href="static/basic.css" rel="stylesheet">
+      <style>
+        .bg{
+            background: url(https://www.hopper.com/static/98cf30b4a7a143fb8760452f28787b8a/879df/app-flights-bg.jpg); 
+            background-size: 1500px 750px;
+            background-repeat: no-repeat;
+        }
+        .row {
+            background: #f6f6f6;
+            border: 1px solid #ccc;
+            overflow: hidden;
+            padding: 10px;
+        }
+        .col {
+            float: left;
+            width: 50%
+        }
+        h1 {
+            font-family:Chalkduster;
+            text-align: center;
+            color:white;
+        }
+        h4 {
+          font-family:Helvetica;
+          color:red;
+          font-size: 12px;
+        }
+        input[type=text], select {
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+          font-family:Helvetica;
+        }
+
+        input[type=submit] {
+          width: 100%;
+          background-color: #4CAF50;
+          color: white;
+          padding: 14px 20px;
+          margin: 8px 0;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+
+        input[type=submit]:hover {
+          background-color: #45a049;
+        }
+
+        .form-group {
+          border-radius: 25px;
+          background-color: #f2f2f2;
+          padding: 20px;
+          position:absolute;
+          top:50%;
+          left:50%;
+          transform:translate(-50%,-50%);
+          -ms-transform:translate(-50%,-50%);
+          border-radius: 25px;
+          box-sizing: border-box;
+        }
+        </style>
+</head>
+<body class="bg">
+    <h1>Flight Predictor</h1>
+    <table>
+      </table>
+      <form action="{{ url_for('get_inputs') }}" method=post class=get_inputs>
+        <div class="form-group">
+          <div class="row">
+            <div class="col">
+              <label for='date'>Flight date:</label>
+              <input type=text size=20 id=date name=date placeholder="mm/dd/yyyy">
+              <label for='origin'>Departure Airport:</label>
+              <input type=text size=20 id=origin name=origin placeholder="Airport code (e.g. SFO)">
+              <label for='dest'>Destination Airport:</label>
+              <input type=text size=20 id=dest name=dest placeholder="Airport code (e.g. SFO)">
+            </div>
+            <div class="col">
+              <label for='airline'>Airline:</label>
+              <input type=text size=20 id=airline name=airline placeholder="UA, AA, B6, DL, WN">
+              <label for='dep_time'>Departure time:</label>
+              <input type=text size=20 id=dep_time name=dep_time placeholder="hh:mm, 24-hour">
+              <label for='arr_time'>Arrival time:</label>
+              <input type=text size=20 id=arr_time name=arr_time placeholder="hh:mm, 24-hour"><br><br>
+            </div>
+          <input type=submit size=20 value=Submit>
+          {% if message %}
+            <h4>{{ message }}</h4>
+          {% endif %}
+        </div>
+    </form>
+          
+          
+          
+          
+</body>
+</html>

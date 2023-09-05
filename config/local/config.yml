@@ -1,0 +1,127 @@
+local_to_s3:
+  upload_set:
+    ext: ''
+acquire_data:
+  delay_data:
+    ext: '.csv'
+    ith_file: 3
+  airport_data:
+    ext: '.xlsx'
+    ith_file: 1
+load_data:
+  load_flight_data:
+    variable: 'Reporting_Airline'
+    airlines: ['AA', 'B6', 'DL', 'UA', 'WN']
+    columns: ['FlightDate','Year','Month', 'DayofMonth', 'DayOfWeek','Reporting_Airline', 
+              'Origin', 'Dest', 'CRSDepTime', 'CRSArrTime','ArrDelay', 'Cancelled', 'Diverted', 
+              'Flights']
+clean_data:
+  remove_observations:
+    columns: ['Cancelled', 'Diverted']
+
+  hour_block:
+    old: ['CRSDepTime', 'CRSArrTime']
+    new: ['DepTime_blk', 'ArrTime_blk']
+
+  delay_category:
+    old: 'ArrDelay'
+    new: 'Delay_group'
+    values: ['Early', 'On-time', 'Late']
+
+  time_category: 
+    old: ['DepTime_blk', 'ArrTime_blk']
+    new: ['DepTime_cat', 'ArrTime_cat']
+    values: ['Morning', 'Afternoon/Evening', 'Night']
+
+generate_features:
+  airport:
+    origin:
+      variable: 'f_international'
+      columns: ['IATA code', 'f_international']
+      old: 'IATA code'
+      new: 'Origin'
+    dest:
+      variable: 'f_international'
+      columns: ['IATA code', 'f_international']
+      old: 'IATA code'
+      new: 'Dest'
+  convert_str: 
+    variable: 'DayOfWeek'
+  create_subset:
+    columns: ['FlightDate','DayOfWeek', 'Origin', 'Dest', 'Reporting_Airline', 
+              'Flights', 'DepTime_cat','ArrTime_cat']
+  features:
+    day_of_week: 
+      sum_columns: ['FlightDate','Origin', 'DayOfWeek', 'Reporting_Airline'] 
+      avg_columns: ['Origin', 'DayOfWeek', 'Reporting_Airline']
+      new: 'avg_org_day_airline'
+    origin_time:
+      sum_columns: ['FlightDate','Origin','Reporting_Airline', 'DepTime_cat']
+      avg_columns: ['Origin','Reporting_Airline','DepTime_cat']
+      new: 'avg_org_time_airline'
+    dest_time:
+      sum_columns: ['FlightDate','Dest','Reporting_Airline', 'ArrTime_cat']
+      avg_columns: ['Dest','Reporting_Airline','ArrTime_cat']
+      new: 'avg_dest_time_airline'
+  merge: 
+    day_of_week: 
+      method: 'inner'
+      columns: ['Origin', 'DayOfWeek', 'Reporting_Airline']
+    origin_time: 
+      method: 'inner'
+      columns: ['Origin', 'Reporting_Airline', 'DepTime_cat']
+    dest_time:
+      method: 'inner'
+      columns: ['Dest', 'Reporting_Airline', 'ArrTime_cat']
+    airport_origin:
+      method: 'left'
+      columns: 'Origin'
+      old: 'f_international'
+      new: 'f_int_origin'
+    airport_dest:
+      method: 'left'
+      columns: 'Dest'
+      old: 'f_international'
+      new: 'f_int_dest'
+
+modeling:
+  convert_categorical:
+    columns: ['Reporting_Airline', 'Origin', 'Dest', 'Delay_group']
+  create_train_test:
+    column: 'FlightDate'
+    date: '2019-04-01'
+    features: ['Month', 'DayofMonth','DayOfWeek','Reporting_Airline', 
+               'Origin', 'Dest', 'DepTime_blk', 'ArrTime_blk', 'avg_org_day_airline', 
+               'avg_org_time_airline', 'avg_dest_time_airline', 'f_int_origin', 'f_int_dest']
+    target: ['Delay_group']
+  train_model: 
+    n_estimators: 20
+    max_depth: 20
+    max_features: 3
+    random_state: 32
+    n_jobs: -1
+  score_model:
+    average: 'weighted'
+
+flights_db:
+  translation:
+    columns: ['Reporting_Airline', 'DayOfWeek', 'Origin', 'Dest', 'DepTime_cat', 
+              'ArrTime_cat', 'avg_org_day_airline', 'avg_org_time_airline', 
+              'avg_dest_time_airline', 'f_int_origin', 'f_int_dest']
+    categories: ['Reporting_Airline', 'Origin', 'Dest']
+    float_columns: ['DayOfWeek', 'avg_org_day_airline', 'avg_org_time_airline', 
+              'avg_dest_time_airline', 'f_int_origin', 'f_int_dest']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
